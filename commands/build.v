@@ -3,6 +3,7 @@ module commands
 import os
 import cli
 import log
+import strings
 import time
 import regex
 import markdown
@@ -68,7 +69,8 @@ fn get_html_path(md_path string) string {
 fn normalise_paths(paths []string) []string {
 	cwd := os.getwd() + os.path_separator
 	mut res := paths.map(os.abs_path(it).replace(cwd, '').replace(os.path_separator, '/'))
-	res.sort()
+	// sort the array in decending order
+	res.sort(a > b)
 	return res
 }
 
@@ -148,6 +150,27 @@ fn (mut b Builder) is_ignore(path string) bool {
 	return false
 }
 
+fn (mut b Builder) generate_archives(mds []string) ! {
+	mut buider := strings.new_builder(200)
+	buider.writeln('# コンテンツ一覧')
+	for path in mds {
+		if b.is_ignore(path) {
+			continue
+		}
+		buider.writeln('- [${path}](${path})')
+	}
+	md := buider.str()
+	content := markdown.to_html(pre_proc_md_to_html(md)!)
+	b.config_map['contents'] = content
+	html := template.parse(b.template_content, b.config_map)
+	html_path := 'archives/index.html'
+	dist_path := os.join_path(b.dist, html_path)
+	if !os.exists(os.dir(dist_path)) {
+		os.mkdir_all(os.dir(dist_path))!
+	}
+	os.write_file(dist_path, html)!
+}
+
 fn build(config config.Config, mut logger log.Log) ! {
 	println('Start building')
 	mut sw := time.new_stopwatch()
@@ -164,9 +187,10 @@ fn build(config config.Config, mut logger log.Log) ! {
 
 	mds := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
+	b.generate_archives(mds)!
 	for path in mds {
 		if b.is_ignore(path) {
-			logger.info('$path is included in ignore_files, skip build')
+			logger.info('${path} is included in ignore_files, skip build')
 			continue
 		}
 		b.md2html(path)!
