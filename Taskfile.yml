@@ -35,15 +35,12 @@ tasks:
   vet:
     desc: Report suspicious code constructs
     cmds:
-      - v vet *.v
+      - v vet .
 
   format:
     desc: Format .v files
     cmds:
-      - v fmt -w *.v
-      - v fmt -w commands
-      - v fmt -w internal/template
-      - v fmt -w internal/config/
+      - v fmt -w .
     
   clean:
     desc: Clean test files

@@ -7,8 +7,11 @@ import strings
 import time
 import regex
 import markdown
+import net.html
+
 import internal.template
 import internal.config
+import internal.paths
 
 const default_config = 'config.toml'
 
@@ -55,25 +58,6 @@ fn new_build_cmd() cli.Command {
 	}
 }
 
-fn get_html_path(md_path string) string {
-	mut file_name := os.file_name(md_path)
-	file_name = file_name.replace('.md', '.html')
-	dir := os.dir(md_path)
-	if dir == '.' {
-		return file_name
-	}
-
-	return os.join_path(dir, file_name)
-}
-
-fn normalise_paths(paths []string) []string {
-	cwd := os.getwd() + os.path_separator
-	mut res := paths.map(os.abs_path(it).replace(cwd, '').replace(os.path_separator, '/'))
-	// sort the array in decending order
-	res.sort(a > b)
-	return res
-}
-
 // pre_proc_md_to_html convert markdown relative links to html relative links
 fn pre_proc_md_to_html(contents string) !string {
 	lines := contents.split_into_lines()
@@ -107,10 +91,11 @@ fn (mut b Builder) md2html(md_path string) ! {
 	// want to change from contents to content
 	b.config_map['contents'] = content
 	html := template.parse(b.template_content, b.config_map)
-	html_path := get_html_path(md_path)
+	html_path := paths.get_html_path(md_path)
 	dist_path := os.join_path(b.dist, html_path)
-	if !os.exists(os.dir(dist_path)) {
-		os.mkdir_all(os.dir(dist_path))!
+	target_dir := os.dir(dist_path)
+	if !os.exists(target_dir) {
+		os.mkdir_all(target_dir)!
 	}
 	os.write_file(dist_path, html)!
 }
@@ -185,7 +170,7 @@ fn build(config config.Config, mut logger log.Log) ! {
 	logger.info('copy static files')
 	b.copy_static()!
 
-	mds := normalise_paths(os.walk_ext('.', '.md'))
+	mds := paths.normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
 	b.generate_archives(mds)!
 	for path in mds {
