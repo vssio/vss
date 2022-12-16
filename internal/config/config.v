@@ -24,8 +24,8 @@ pub mut:
 pub fn load(toml_text string) !Config {
 	doc := toml.parse_text(toml_text)!
 
-	mut config := doc.reflect<Config>()
-	config.build = doc.value('build').reflect<Build>()
+	mut config := doc.reflect[Config]()
+	config.build = doc.value('build').reflect[Build]()
 
 	return config
 }
