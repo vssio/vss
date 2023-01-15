@@ -1,5 +1,6 @@
 module template
 
+// parse embed values in the template file
 pub fn parse(template string, target map[string]string) string {
 	mut content := template
 	for key in target.keys() {
@@ -10,3 +11,4 @@ pub fn parse(template string, target map[string]string) string {
 	}
 	return content
 }
+

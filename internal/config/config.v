@@ -20,7 +20,7 @@ pub mut:
 	base_url    string
 }
 
-// load
+// load parses settings described in toml
 pub fn load(toml_text string) !Config {
 	doc := toml.parse_text(toml_text)!
 
@@ -38,3 +38,4 @@ pub fn (c Config) as_map() map[string]string {
 	mp['base_url'] = c.base_url
 	return mp
 }
+

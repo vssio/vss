@@ -3,6 +3,7 @@ module commands
 import os
 import cli
 
+// execute is the root function of the commands module
 pub fn execute() {
 	mut app := cli.Command{
 		name: 'vss'
@@ -19,3 +20,4 @@ pub fn execute() {
 	app.setup()
 	app.parse(os.args)
 }
+
