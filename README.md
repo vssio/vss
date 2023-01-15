@@ -1,3 +1,5 @@
+:arrow_upper_left: Table of Contents
+
 # vss
 
 vss is an easy to use static site generator. With `layout/index.html`, Markdown
