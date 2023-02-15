@@ -168,7 +168,7 @@ fn build(config config.Config, mut logger log.Log) ! {
 	logger.info('start md to html')
 	for path in mds {
 		if b.is_ignore(path) {
-			logger.info('$path is included in ignore_files, skip build')
+			logger.info('${path} is included in ignore_files, skip build')
 			continue
 		}
 		b.md2html(path)!

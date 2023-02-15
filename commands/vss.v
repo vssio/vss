@@ -20,4 +20,3 @@ pub fn execute() {
 	app.setup()
 	app.parse(os.args)
 }
-

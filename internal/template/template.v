@@ -11,4 +11,3 @@ pub fn parse(template string, target map[string]string) string {
 	}
 	return content
 }
-

@@ -96,7 +96,7 @@ fn watch(path string, config config.Config, mut logger log.Log) {
 			}
 			now := os.file_last_mod_unix(w.path)
 			if now > w.time_stamp {
-				println('modified file: $w.path')
+				println('modified file: ${w.path}')
 				w.time_stamp = now
 
 				build(config, mut logger) or {
@@ -117,7 +117,7 @@ fn serve(mut logger log.Log) ! {
 		port: commands.cport
 	}
 
-	local_base_url := 'http://localhost:$commands.cport/'
+	local_base_url := 'http://localhost:${commands.cport}/'
 	mut config := load_config(default_config)!
 	config.base_url = local_base_url
 	println(local_base_url)
@@ -128,7 +128,7 @@ fn serve(mut logger log.Log) ! {
 		println('Build failed')
 	}
 
-	w := go watch('.', config, mut logger)
+	w := spawn watch('.', config, mut logger)
 	server.listen_and_serve()
 
 	w.wait()
