@@ -74,6 +74,8 @@ fn normalise_paths(paths []string) []string {
 
 // pre_proc_md_to_html convert markdown relative links to html relative links
 fn pre_proc_md_to_html(contents string) !string {
+	// TODO: ここの処理は html 変換かけたあとに、以下のモジュールを使ってやる
+	// https://modules.vlang.io/net.html.html#parse
 	lines := contents.split_into_lines()
 	mut parsed_lines := []string{len: lines.len}
 	mut re := regex.regex_opt(r'\[.+\]\(.+\.md\)') or { return err }
