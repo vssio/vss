@@ -118,7 +118,7 @@ pub fn (mut s ServeCommand) run() ! {
 	}
 	mut server := &http.Server{
 		handler: handler
-		port: commands.cport
+		addr: ':${commands.cport}'
 	}
 
 	// base_url を localhost にする

@@ -16,10 +16,10 @@ fn load_config(toml_file string) !config.Config {
 	return config.load(toml_text)
 }
 
-fn init_logger() log.Log {
-	return log.Log{
-		level: log.Level.info
-	}
+fn init_logger() &log.Log {
+	mut l := log.Log{}
+	l.set_level(.info)
+	return &l
 }
 
 fn init_commands() cli.Command {
