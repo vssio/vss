@@ -6,7 +6,7 @@ import log
 import commands
 import internal.config
 
-const version = '0.3.0'
+const version = '0.3.1'
 
 const default_config = 'config.toml'
 
